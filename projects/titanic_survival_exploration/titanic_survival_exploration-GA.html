@@ -196,7 +196,7 @@ Run the code cell below to load our data and display the first few entries (pass
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -216,29 +216,6 @@ Run the code cell below to load our data and display the first few entries (pass
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansired"></span>
-<span class="ansired">ImportError</span>Traceback (most recent call last)
-<span class="ansigreen">&lt;ipython-input-5-a7273ffdd53a&gt;</span> in <span class="ansicyan">&lt;module&gt;</span><span class="ansiblue">()</span>
-<span class="ansigreen">----&gt; 1</span><span class="ansired"> </span><span class="ansigreen">import</span> numpy <span class="ansigreen">as</span> np<span class="ansiblue"></span>
-<span class="ansigreen">      2</span> <span class="ansigreen">import</span> pandas <span class="ansigreen">as</span> pd<span class="ansiblue"></span>
-<span class="ansigreen">      3</span> <span class="ansiblue"></span>
-<span class="ansigreen">      4</span> <span class="ansired"># RMS Titanic data visualization code</span><span class="ansiblue"></span><span class="ansiblue"></span>
-<span class="ansigreen">      5</span> <span class="ansigreen">from</span> titanic_visualizations <span class="ansigreen">import</span> survival_stats<span class="ansiblue"></span>
-
-<span class="ansired">ImportError</span>: No module named numpy</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -449,7 +426,10 @@ Fill in the missing code below so that the function will make this prediction.<b
         
         <span class="c"># Remove the &#39;pass&#39; statement below </span>
         <span class="c"># and write your prediction conditions here</span>
-        <span class="k">pass</span>
+        <span class="k">if</span> <span class="n">passenger</span><span class="p">[</span><span class="s">&#39;Sex&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;female&#39;</span><span class="p">:</span>
+            <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     
     <span class="c"># Return our predictions</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
@@ -706,7 +686,8 @@ Make sure to keep track of the various features and conditions you tried before 
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer</strong>: 81.48%</p>
+<p><strong>Answer</strong>: 81.48%
+I tried a number of different combinations for Males over Age 10, but there were no clear parameter combinations that upped the outcomes accuracy score. I went back to the Female population and found that Passenger Classes 1 and 2 had very high survival rates as well as those Females who Embarked from location code S.</p>
 
 </div>
 </div>
@@ -728,7 +709,7 @@ Make sure to keep track of the various features and conditions you tried before 
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer</strong>: Fantasy Football Player Value - the Points Per Reception format points per game compared to opposing team's defense, the value in comparison to other players that week against their respective opponent.</p>
+<p><strong>Answer</strong>: Fantasy Football Player Value Per Game - the Points Per Reception format points per game compared to opposing team's defense, and the value in comparison to other players that week against their respective opponent.</p>
 
 </div>
 </div>
