@@ -5,7 +5,7 @@ Created on Tues Aug 30 20:49:01 2016
 @author: gilakos
 """
 ### Step 1 ###
-print data
+
 # Import libraries necessary for this project
 import numpy as np
 import pandas as pd
@@ -84,8 +84,7 @@ print "Training and testing split was successful."
 ### Step 5 ###
 
 # Produce Complexity curves
-#***This was the code given which didn't work::: vs.ModelComplexity(X_train, y_train)
-#vs.ModelComplexity(features, prices)
+vs.ModelComplexity(X_train, y_train)
 
 ### Step 6 ###
 
