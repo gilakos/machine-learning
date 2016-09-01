@@ -143,3 +143,11 @@ for i, price in enumerate(reg.predict(client_data)):
 ### Step 9 ###
 vs.PredictTrials(features, prices, fit_model, client_data)
     
+### Step 10 ###
+#Review the preditions
+print features.describe()
+
+import matplotlib.pyplot as plt
+plt.hist(prices, bins = 30)
+for price in reg.predict(client_data):
+    plt.axvline(price, c = 'r', lw = 3)
