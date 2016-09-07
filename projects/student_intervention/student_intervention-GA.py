@@ -31,7 +31,7 @@ n_passed = student_data[student_data['passed']=='yes'].shape[0]
 n_failed = student_data[student_data['passed']=='no'].shape[0]
 
 # TODO: Calculate graduation rate (multiply denominator by 1.0 to ensure float division not integer division)
-grad_rate = n_passed/(1.0*n_students)
+grad_rate = n_passed/(1.0*n_students)*100
 
 # Print the results
 print "Total number of students: {}".format(n_students)
@@ -103,7 +103,7 @@ num_test = X_all.shape[0] - num_train
 test_size_perc = num_test/(1.0*n_students)
 
 # TODO: Shuffle and split the dataset into the number of training and testing points above
-X_train, X_test, y_train, y_test = train_test_split(X_all, y_all, test_size=test_size_perc, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X_all, y_all, stratify = y_all, test_size=test_size_perc, random_state=0)
 
 # Show the results of the split
 print "Training set has {} samples.".format(X_train.shape[0])
