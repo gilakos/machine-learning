@@ -21,8 +21,8 @@ print "Student data read successfully!"
 # TODO: Calculate number of students
 n_students = student_data.shape[0]
 
-# TODO: Calculate number of features
-n_features = student_data.shape[1]
+# TODO: Calculate number of features (Number of Columns minus the one for target values ("passed"))
+n_features = student_data.shape[1]-1
 
 # TODO: Calculate passing students
 n_passed = student_data[student_data['passed']=='yes'].shape[0]
@@ -30,8 +30,8 @@ n_passed = student_data[student_data['passed']=='yes'].shape[0]
 # TODO: Calculate failing students
 n_failed = student_data[student_data['passed']=='no'].shape[0]
 
-# TODO: Calculate graduation rate
-grad_rate = n_passed/n_students
+# TODO: Calculate graduation rate (multiply denominator by 1.0 to ensure float division not integer division)
+grad_rate = n_passed/(1.0*n_students)
 
 # Print the results
 print "Total number of students: {}".format(n_students)
@@ -94,8 +94,8 @@ print "Processed feature columns ({} total features):\n{}".format(len(X_all.colu
 # TODO: Import any additional functionality you may need here
 from sklearn.cross_validation import train_test_split
 
-# TODO: Set the number of training points
-num_train = int(0.8*n_students)
+# TODO: Set the number of training points (set directly with value)
+num_train = 300
 
 # Set the number of testing points
 num_test = X_all.shape[0] - num_train
@@ -157,34 +157,39 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
 
-# TODO: Initialize the three models
-clf_A = RandomForestClassifier()
-clf_B = KNeighborsClassifier()
-clf_C = svm.SVC(random_state=17)
+# TODO: Initialize the three models (adding them to a list)
+clfs = []
+clfs.append(RandomForestClassifier(random_state=17))
+clfs.append(KNeighborsClassifier())
+clfs.append(svm.SVC(random_state=17))
 
 # TODO: Set up the training set sizes
-X_train_100 = X_train[:100]
-y_train_100 = y_train[:100]
-
-X_train_200 = X_train[:200]
-y_train_200 = y_train[:200]
-
-X_train_300 = X_train[:300]
-y_train_300 = y_train[:300]
-
 # TODO: Execute the 'train_predict' function for each classifier and each training set size
-train_predict(clf_A, X_train_100, y_train_100, X_test, y_test)
-train_predict(clf_A, X_train_200, y_train_200, X_test, y_test)
-train_predict(clf_A, X_train_300, y_train_300, X_test, y_test)
-print('---')
-train_predict(clf_B, X_train_100, y_train_100, X_test, y_test)
-train_predict(clf_B, X_train_200, y_train_200, X_test, y_test)
-train_predict(clf_B, X_train_300, y_train_300, X_test, y_test)
-print('---')
-train_predict(clf_C, X_train_100, y_train_100, X_test, y_test)
-train_predict(clf_C, X_train_200, y_train_200, X_test, y_test)
-train_predict(clf_C, X_train_300, y_train_300, X_test, y_test)
-print('---')
+# (simplified to loop through each classifier in the list)
+# Loop through each classifier model type, then through the training action
+for clf in clfs:
+    print "\n{}: \n".format(clf.__class__.__name__)
+    for n in [100, 200, 300]:
+        train_predict(clf, X_train[:n], y_train[:n], X_test, y_test)  
+
+### Step 7B ###
+# Compare models predictions 
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+#%matplotlib inline
+
+# Compute confusion matrix for each model
+for clf in clfs:
+    cm = confusion_matrix(y_test.values, clf.predict(X_test))
+
+    # view with a heatmap
+    sns.heatmap(cm, annot=True, cmap='Blues', xticklabels=['no', 'yes'], yticklabels=['no', 'yes'])
+
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.title('Confusion matrix for:\n{}'.format(clf.__class__.__name__))
+    plt.figure()
 
 ### Step 8 ###
 
@@ -196,7 +201,7 @@ from sklearn.metrics import make_scorer
 parameters = {'max_depth': range(1, 11), 'n_estimators': range(2,11), 'max_features': range(2,16) }
 
 # TODO: Initialize the classifier
-clf = RandomForestClassifier()
+clf = RandomForestClassifier(random_state=17)
 
 # TODO: Make an f1 scoring function using 'make_scorer' 
 f1_scorer = make_scorer(f1_score, pos_label='yes')
