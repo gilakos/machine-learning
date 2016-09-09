@@ -166,7 +166,7 @@ for n in nClusters:
     centers = clusterer.means_
 
     # TODO: Predict the cluster for each transformed sample data point
-    sample_preds = clusterer.predict(reduced_data)
+    sample_preds = clusterer.predict(pca_samples)
 
     # TODO: Calculate the mean silhouette coefficient for the number of clusters chosen
     score = silhouette_score(reduced_data, preds, random_state=0)
@@ -188,6 +188,9 @@ segments = ['Segment {}'.format(i) for i in range(0,len(centers))]
 true_centers = pd.DataFrame(np.round(true_centers), columns = data.keys())
 true_centers.index = segments
 display(true_centers)
+
+true_centers = true_centers.append(data.describe().ix['50%'])
+true_centers.plot(kind = 'bar', figsize = (16, 4))
 
 ### Step 16 ###
 # Display the predictions
