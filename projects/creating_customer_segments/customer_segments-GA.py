@@ -37,9 +37,20 @@ samples = pd.DataFrame(data.loc[indices], columns = data.keys()).reset_index(dro
 print "Chosen samples of wholesale customers dataset:"
 display(samples)
 
+# Create a heatmap to understand samples' percentiles for each category
+import seaborn as sns
+# Calculate the percentiles for the whole data set
+category_percentiles = data.rank(pct=True)
+# Convert to Percentages
+category_percentiles = 100*category_percentiles.round(decimals=2)
+# Isolate the three samples
+category_percentiles = category_percentiles.iloc[indices]
+# Plot the heatmap
+sns.heatmap(category_percentiles, vmin=1, vmax=99, annot=True)
+
 ### Step 4 ###
 # TODO: Make a copy of the DataFrame, using the 'drop' function to drop the given feature
-pull_label = 'Grocery'
+pull_label = 'Detergents_Paper'
 new_labels = data[pull_label]
 new_data = data.drop([pull_label],axis = 1)
 
@@ -193,9 +204,34 @@ true_centers = true_centers.append(data.describe().ix['50%'])
 true_centers.plot(kind = 'bar', figsize = (16, 4))
 
 ### Step 16 ###
+# Print the pca samples to check coordinates for the scatter plot
+# Display the True Centers in range of original values
+display(true_centers[:-1])
+# Convert the PCA Samples back to true values
+log_pca_samples = pca.inverse_transform(pca_samples)
+true_values = np.exp(log_pca_samples)
+true_values_df = pd.DataFrame(np.round(true_values), columns = data.keys())
+true_values_df.index = ['Sample 0', 'Sample 1', 'Sample 2']
+# Display the True Values
+display(true_values_df)
+
+print "***Note the lowest euclidean value distance value for each row below***"
+# Calculate the closest cluster point
+from scipy.spatial.distance import cdist
+cluster_distances = cdist(true_values_df, true_centers[:-1], 'euclidean')
+cluster_df = pd.DataFrame(np.round(cluster_distances))
+cluster_df.index = ['Sample 0', 'Sample 1', 'Sample 2']
+cluster_df.columns = ['Segment 0', 'Segment 1']
+display(cluster_df)
+closest = np.argmin(cluster_distances, axis=1)
+for i, found in enumerate(closest):
+    print "The closest Cluster Center for Sample Point {0} is {1}".format(i, found)
+
 # Display the predictions
 for i, pred in enumerate(sample_preds):
     print "Sample point", i, "predicted to be in Cluster", pred
+    print "Prediction is {}".format(pred==closest[i])
+    
     
 ### Step 17 ###
 # Display the clustering results based on 'Channel' data
