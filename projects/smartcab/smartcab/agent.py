@@ -28,9 +28,17 @@ class LearningAgent(Agent):
         deadline = self.env.get_deadline(self)
 
         # TODO: Update state
-        ### Step 1 - Implement a Basic Driving Agent (random move) ###
-        self.next_waypoint = random.choice(Environment.valid_actions[:])
-
+        ### Step 2 - Inform the Driving Agent (add states) ###
+        if inputs['light'] == 'green':
+            if inputs['oncoming'] == 'forward':
+                self.state = 'green-yield'
+            else:
+                self.state = 'green-free'
+        elif inputs['light'] == 'red':
+            if inputs['oncoming'] == None or inputs['oncoming'] == 'right':
+                self.state = 'red-free'
+            else:
+                self.state = 'red-yield'
         
         # TODO: Select action according to your policy
         #action = None #original none action
