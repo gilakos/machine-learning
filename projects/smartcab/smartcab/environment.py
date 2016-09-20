@@ -31,6 +31,7 @@ class Environment(object):
     valid_headings = [(1, 0), (0, -1), (-1, 0), (0, 1)]  # ENWS
     hard_time_limit = -100  # even if enforce_deadline is False, end trial when deadline reaches this value (to avoid deadlocks)
 
+
     def __init__(self, num_dummies=3):
         self.num_dummies = num_dummies  # no. of dummy agents
         
@@ -56,6 +57,11 @@ class Environment(object):
                     continue
                 if (abs(a[0] - b[0]) + abs(a[1] - b[1])) == 1:  # L1 distance = 1
                     self.roads.append((a, b))
+        
+        # Add goal distance variable to environment
+        self.goal_distance = 0
+        # Add trial number to this environment
+        self.trial = 0
 
         # Dummy agents
         for i in xrange(self.num_dummies):
@@ -74,9 +80,10 @@ class Environment(object):
         self.primary_agent = agent
         self.enforce_deadline = enforce_deadline
 
-    def reset(self):
+    def reset(self, trial):
         self.done = False
         self.t = 0
+        self.trial = trial
 
         # Reset traffic lights
         for traffic_light in self.intersections.itervalues():
@@ -92,8 +99,10 @@ class Environment(object):
             destination = random.choice(self.intersections.keys())
 
         start_heading = random.choice(self.valid_headings)
-        deadline = self.compute_dist(start, destination) * 5
-        print "Environment.reset(): Trial set up with start = {}, destination = {}, deadline = {}".format(start, destination, deadline)
+        # Set environment goal distance to calculated distance
+        self.goal_distance = self.compute_dist(start, destination)
+        deadline = self.goal_distance * 5
+        #print "Environment.reset(): Trial set up with start = {}, destination = {}, distance = {}. deadline = {}".format(start, destination, self.goal_distance, deadline)
 
         # Initialize agent(s)
         for agent in self.agent_states.iterkeys():
@@ -122,7 +131,9 @@ class Environment(object):
             agent_deadline = self.agent_states[self.primary_agent]['deadline']
             if agent_deadline <= self.hard_time_limit:
                 self.done = True
-                print "Environment.step(): Primary agent hit hard time limit ({})! Trial aborted.".format(self.hard_time_limit)
+                #print "Environment.step(): Primary agent hit hard time limit ({})! Trial aborted.".format(self.hard_time_limit)
+                print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3} }}, ignore_index=True)".format(False,self.goal_distance, self.primary_agent.traveled, self.t)
+
             elif self.enforce_deadline and agent_deadline <= 0:
                 self.done = True
                 print "Environment.step(): Primary agent ran out of time! Trial aborted."
@@ -210,7 +221,8 @@ class Environment(object):
                 if state['deadline'] >= 0:
                     reward += 10  # bonus
                 self.done = True
-                print "Environment.act(): Primary agent has reached destination!"  # [debug]
+                #print "Environment.act(): Primary agent has reached destination of distance {0} traveled {1} at time {2}!".format(self.goal_distance, self.primary_agent.traveled, self.t)  # [debug]
+                print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3} }}, ignore_index=True)".format(True,self.goal_distance, self.primary_agent.traveled, self.t)
             self.status_text = "state: {}\naction: {}\nreward: {}".format(agent.get_state(), action, reward)
             #print "Environment.act() [POST]: location: {}, heading: {}, action: {}, reward: {}".format(location, heading, action, reward)  # [debug]
 
