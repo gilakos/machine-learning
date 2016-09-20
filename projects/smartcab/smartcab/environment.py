@@ -131,8 +131,8 @@ class Environment(object):
             agent_deadline = self.agent_states[self.primary_agent]['deadline']
             if agent_deadline <= self.hard_time_limit:
                 self.done = True
-                print "Environment.step(): Primary agent hit hard time limit ({})! Trial aborted.".format(self.hard_time_limit)
-                #print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3} }}, ignore_index=True)".format(False,self.goal_distance, self.primary_agent.traveled, self.t)
+                #print "Environment.step(): Primary agent hit hard time limit ({})! Trial aborted.".format(self.hard_time_limit)
+                print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3} }}, ignore_index=True)".format(False,self.goal_distance, self.primary_agent.traveled, self.t)
 
             elif self.enforce_deadline and agent_deadline <= 0:
                 self.done = True
@@ -222,7 +222,7 @@ class Environment(object):
                     reward += 10  # bonus
                 self.done = True
                 #print "Environment.act(): Primary agent has reached destination of distance {0} traveled {1} at time {2}!".format(self.goal_distance, self.primary_agent.traveled, self.t)  # [debug]
-                #print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3} }}, ignore_index=True)".format(True,self.goal_distance, self.primary_agent.traveled, self.t)
+                print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3} }}, ignore_index=True)".format(True,self.goal_distance, self.primary_agent.traveled, self.t)
             self.status_text = "state: {}\naction: {}\nreward: {}".format(agent.get_state(), action, reward)
             #print "Environment.act() [POST]: location: {}, heading: {}, action: {}, reward: {}".format(location, heading, action, reward)  # [debug]
 
