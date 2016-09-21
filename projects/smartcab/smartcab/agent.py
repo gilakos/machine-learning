@@ -1,5 +1,5 @@
 import random
-from environment import Agent, Environment
+from environment import Agent, Environment, TrafficLight
 from planner import RoutePlanner
 from simulator import Simulator
 
@@ -29,16 +29,9 @@ class LearningAgent(Agent):
 
         # TODO: Update state
         ### Step 2 - Inform the Driving Agent (add states) ###
-        if inputs['light'] == 'green':
-            if inputs['oncoming'] == 'forward':
-                self.state = 'green-yield'
-            else:
-                self.state = 'green-free'
-        elif inputs['light'] == 'red':
-            if inputs['oncoming'] == None or inputs['oncoming'] == 'right':
-                self.state = 'red-free'
-            else:
-                self.state = 'red-yield'
+        # States: waypoints, light, oncoming, left, right,
+        self.state = (self.next_waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'])
+        
         
         # TODO: Select action according to your policy
         #action = None #original none action
