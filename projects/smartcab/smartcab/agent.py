@@ -73,7 +73,7 @@ class LearningAgent(Agent):
 
         # Establish Constants for the Q Learning update equation
         alpha = 0.5
-        gamma = 0.0
+        gamma = 0.25
         
         if t == 0:
             # States: waypoints, light, oncoming, left, right
@@ -128,7 +128,7 @@ def run():
     # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
     
     # Now simulate it
-    sim = Simulator(e, update_delay=0.25, display=True)  # create simulator (uses pygame when display=True, if available)
+    sim = Simulator(e, update_delay=0.125, display=True)  # create simulator (uses pygame when display=True, if available)
     # NOTE: To speed up simulation, reduce update_delay and/or set display=False
 
     sim.run(n_trials=100)  # run for a specified number of trials
