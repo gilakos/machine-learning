@@ -136,7 +136,8 @@ class Environment(object):
 
             elif self.enforce_deadline and agent_deadline <= 0:
                 self.done = True
-                print "Environment.step(): Primary agent ran out of time! Trial aborted."
+                #print "Environment.step(): Primary agent ran out of time! Trial aborted."
+                print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3} }}, ignore_index=True)".format(False,self.goal_distance, self.primary_agent.traveled, self.t)
             self.agent_states[self.primary_agent]['deadline'] = agent_deadline - 1
 
         self.t += 1
