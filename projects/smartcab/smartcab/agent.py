@@ -1,5 +1,5 @@
 import random
-from environment import Agent, Environment
+from environment import Agent, Environment, TrafficLight
 from planner import RoutePlanner
 from simulator import Simulator
 
@@ -28,9 +28,10 @@ class LearningAgent(Agent):
         deadline = self.env.get_deadline(self)
 
         # TODO: Update state
-        ### Step 1 - Implement a Basic Driving Agent (random move) ###
-        self.next_waypoint = random.choice(Environment.valid_actions[:])
-
+        ### Step 2 - Inform the Driving Agent (add states) ###
+        # States: waypoints, light, oncoming, left, right,
+        self.state = (self.next_waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'])
+        
         
         # TODO: Select action according to your policy
         #action = None #original none action
@@ -53,11 +54,11 @@ def run():
     # Set up environment and agent
     e = Environment()  # create environment (also adds some dummy traffic - cyan)
     a = e.create_agent(LearningAgent)  # create agent - red
-    e.set_primary_agent(a, enforce_deadline=True)  # specify agent to track
+    e.set_primary_agent(a, enforce_deadline=False)  # specify agent to track
     # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
     
     # Now simulate it
-    sim = Simulator(e, update_delay=0.05, display=True)  # create simulator (uses pygame when display=True, if available)
+    sim = Simulator(e, update_delay=0.25, display=True)  # create simulator (uses pygame when display=True, if available)
     # NOTE: To speed up simulation, reduce update_delay and/or set display=False
 
     sim.run(n_trials=20)  # run for a specified number of trials
