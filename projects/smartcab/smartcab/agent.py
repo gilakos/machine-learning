@@ -75,6 +75,10 @@ class LearningAgent(Agent):
         # Establish Constants for the Q Learning update equation
         alpha = self.env.alpha
         gamma = self.env.gamma
+        epsilon = 0.10
+        
+        best_action = None
+        max_q = []
         
         if t == 0:
             # States: waypoints, light, oncoming, left, right
@@ -87,11 +91,20 @@ class LearningAgent(Agent):
         else:   
             # Define the new state
             self.s_prime  = (self.next_waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'])
-            # Find Max Q
-            max_q = self.maximum_q(self.s_prime, self.valid_actions)
-            #max_q = [0.0,1.0]
+            
+            # Add epsilon greedy policy with time decay
+            if random.random()*((self.env.trial)/(100.0)) < epsilon:
+                # Select an action randomly
+                best_action = random.choice(self.valid_actions)
+                # Get the Q value from the table
+                max_q = [best_action, self.q_table[(self.s, best_action)]]
+            else:
+                # Find Max Q
+                max_q = self.maximum_q(self.s_prime, self.valid_actions)
+                #max_q = [0.0,1.0]
+            
             # Calculate Q
-            Q_value = (1.0-alpha)*self.q_table[(self.s, self.a)] + alpha*(self.r + gamma * max_q[1])
+            Q_value = (1-alpha)*self.q_table[(self.s, self.a)] + alpha*(self.r + gamma * max_q[1])
             # Update the Q table            
             self.q_table[(self.s, self.a)] = Q_value
             
@@ -102,9 +115,7 @@ class LearningAgent(Agent):
             self.r = self.env.act(self, self.a)
             # Replace s, a, r
             self.s = self.s_prime
-            
-        self.state = self.s
-
+            self.state = self.s
 
         # Add conditionals to capture distance traveled
         if self.next_waypoint != None:
@@ -123,11 +134,11 @@ def run():
     """Run the agent for a finite number of trials."""
     
     # Define list of alphas (learning rate) to test 
-    alphas = [0.25, 0.5, 0.75, 1.0] 
-    #alphas = [0.25]
+    #alphas = [0.25, 0.5, 0.75, 1.0] 
+    alphas = [0.5]
     # Define list of gammas (future discount factor) to test
-    gammas = [0.0, 0.25, 0.5, 0.75, 1.0]
-    #gammas = [0.25]
+    #gammas = [0.0, 0.25, 0.5, 0.75, 1.0]
+    gammas = [0.75]
 
     # Create an array to capture all trial data
     trial_data = []
@@ -145,10 +156,10 @@ def run():
             sim = Simulator(e, update_delay=0.01, display=False)  # create simulator (uses pygame when display=True, if available)
             # NOTE: To speed up simulation, reduce update_delay and/or set display=False
         
-            sim.run(n_trials=100)  # run for a specified number of trials
+            sim.run(n_trials=1000)  # run for a specified number of trials
             # NOTE: To quit midway, press Esc or close pygame window, or hit Ctrl+C on the command-line
             
-    with open('trials_a+g.csv', 'wb') as mycsvfile:
+    with open('trials_1000_w-e.csv', 'wb') as mycsvfile:
         thedatawriter = csv.writer(mycsvfile, delimiter=',')
         for row in trial_data:
             thedatawriter.writerow(row)
