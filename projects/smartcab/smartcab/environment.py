@@ -30,13 +30,11 @@ class Environment(object):
     valid_inputs = {'light': TrafficLight.valid_states, 'oncoming': valid_actions, 'left': valid_actions, 'right': valid_actions}
     valid_headings = [(1, 0), (0, -1), (-1, 0), (0, 1)]  # ENWS
     hard_time_limit = -100  # even if enforce_deadline is False, end trial when deadline reaches this value (to avoid deadlocks)
-    
 
-    def __init__(self, trial_data, alpha=0.5, gamma=0.25, num_dummies=3):
+
+    def __init__(self, num_dummies=3):
         self.num_dummies = num_dummies  # no. of dummy agents
-        self.alpha = alpha
-        self.gamma = gamma
-        self.trial_data = trial_data
+        
         # Initialize simulation variables
         self.done = False
         self.t = 0
@@ -134,14 +132,11 @@ class Environment(object):
             if agent_deadline <= self.hard_time_limit:
                 self.done = True
                 #print "Environment.step(): Primary agent hit hard time limit ({})! Trial aborted.".format(self.hard_time_limit)
-                print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3}, 'alpha':{4}, 'gamma':{5} }}, ignore_index=True)".format(False,self.goal_distance, self.primary_agent.traveled, self.t, self.alpha, self.gamma)
-                self.trial_data.append([False,self.goal_distance, self.primary_agent.traveled, self.t, self.alpha, self.gamma])
+                print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3} }}, ignore_index=True)".format(False,self.goal_distance, self.primary_agent.traveled, self.t)
+
             elif self.enforce_deadline and agent_deadline <= 0:
                 self.done = True
-                #print "Environment.step(): Primary agent ran out of time! Trial aborted."
-                print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3}, 'alpha':{4}, 'gamma':{5} }}, ignore_index=True)".format(False,self.goal_distance, self.primary_agent.traveled, self.t, self.alpha, self.gamma)
-                self.trial_data.append([False,self.goal_distance, self.primary_agent.traveled, self.t, self.alpha, self.gamma])
-
+                print "Environment.step(): Primary agent ran out of time! Trial aborted."
             self.agent_states[self.primary_agent]['deadline'] = agent_deadline - 1
 
         self.t += 1
@@ -227,8 +222,7 @@ class Environment(object):
                     reward += 10  # bonus
                 self.done = True
                 #print "Environment.act(): Primary agent has reached destination of distance {0} traveled {1} at time {2}!".format(self.goal_distance, self.primary_agent.traveled, self.t)  # [debug]
-                print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3}, 'alpha':{4}, 'gamma':{5} }}, ignore_index=True)".format(True,self.goal_distance, self.primary_agent.traveled, self.t, self.alpha, self.gamma)
-                self.trial_data.append([True,self.goal_distance, self.primary_agent.traveled, self.t, self.alpha, self.gamma])
+                print "df=df.append( {{ 'reached':{0},'goal_distance':{1},'distance_traveled':{2},'steps':{3} }}, ignore_index=True)".format(True,self.goal_distance, self.primary_agent.traveled, self.t)
             self.status_text = "state: {}\naction: {}\nreward: {}".format(agent.get_state(), action, reward)
             #print "Environment.act() [POST]: location: {}, heading: {}, action: {}, reward: {}".format(location, heading, action, reward)  # [debug]
 
