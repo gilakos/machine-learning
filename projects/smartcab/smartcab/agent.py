@@ -92,7 +92,7 @@ class LearningAgent(Agent):
             self.s_prime  = (self.next_waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'])
             
             # Add epsilon greedy policy with time decay
-            if random.random()*((100-self.env.trial)/(100.0)) < epsilon:
+            if random.random()*((self.env.trial)/(100.0)) < epsilon:
                 # Select an action randomly
                 best_action = random.choice(self.valid_actions)
                 # Get the Q value from the table
