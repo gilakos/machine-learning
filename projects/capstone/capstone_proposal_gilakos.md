@@ -85,7 +85,7 @@ This project will be implemented through the TensorFlow library, first using Sup
 - Develop simple function for querying predictions based on one or more labels
 
 ### [Footnotes]
-1.[TechCrumnch // What’s next for personal financial services?](https://techcrunch.com/2016/04/23/whats-next-for-personal-financial-services/)
+1. [TechCrumnch // What’s next for personal financial services?](https://techcrunch.com/2016/04/23/whats-next-for-personal-financial-services/)
 > If 2015 was the year of the great “Bank Unbundling,” with new companies dissecting the consumer banking experience to offer specialized services, it was also a year that saw the emergence of a new landscape of financial influencers taking a seat at the table.
 
 2. [Federal Reserve Bank of New York // Intraday Liquidity Flows](http://libertystreeteconomics.newyorkfed.org/2012/08/intraday-liquidity-flows.html)
