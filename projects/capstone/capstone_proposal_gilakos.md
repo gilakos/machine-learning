@@ -6,7 +6,7 @@ November 4th, 2016
 ## Proposal // Financial Transaction Predictor
 
 ### Domain Background
-Managing your personal finances is a time-consuming and stress-inducing activity. With the rise of services and apps that mark the trend towards the unbundling of banks [^first], the "complicated-ness" of personal finance has only increased and our ability as individuals to optimally manage our expanding number of accounts has only become more challenging. From a systemic viewpoint the complexity of banking is also significant - more than $14 trillion moves flows through the banking system in the United States every day [^second]. Furthermore, the transactions that make up these flows are often inconsistently formatted or minimally labeled. Even large fintech aggregator apps do a poor job of munging, cleaning, and categorizing transaction data. Here are a few hilarious examples from my own Mint account (which I do manage with some regularity):
+Managing your personal finances is a time-consuming and stress-inducing activity. With the rise of services and apps that mark the trend towards the unbundling of banks [^first], the "complicated-ness" of personal finance has only increased and our ability as individuals to optimally manage our expanding number of accounts has only become more challenging. From a systemic viewpoint the complexity of banking is also significant - more than $14 trillion flows through the banking system in the United States every day [^second]. Furthermore, the transactions that make up these flows are often inconsistently formatted or minimally labeled. Even large fintech aggregator apps do a poor job of munging, cleaning, and categorizing transaction data. Here are a few hilarious examples from my own Mint account (which I do manage with some regularity):
 
 `$9.99 PMG CLE AIRPRT 10/25 #000322122 PURCHASE 18930 BROOKPARK R CLEVELAND OH` becomes **PMG CLE AIRPRT** categorized as **Doctor**
 *I hope I didn't go to a discount Doctor at the Cleveland Airprt (mis-spelling intentional).* 
@@ -14,19 +14,71 @@ Managing your personal finances is a time-consuming and stress-inducing activity
 `$29.05 BOGARTS SMOKEHOUSE 04/10` becomes **BOGARTS** categorized as **Personal Care**
 *I tried hard, but am having a difficult time rationalizing how delicious St. Louis Style Bar-B-Que helps me with my personal care.*
 
-As we can see in the two examples above, we would receive at a minimum three data points per transaction - Amount, Date, and a Textual Description. Implictly we also have which account the transaction processes through, as well as day of the week, day of the month, and day of the year. Building a model using deep learning with the capability of predicting categorization and future cash flow would have value in that it would help us optimize the work our money does for us while reducing the stress of having to do so directly and explicitly[^third]. This transaction data is key - but how many dimensions do we need, and can we infer labels i.e. categories when the data is lacking detail (as we can directly see in the second example above)? 
+As we can see in the two examples above, we would receive at a minimum four data points per transaction - Amount, Date, Category, and a Textual Description. Implictly we also have which account the transaction processes through, as well as day of the week, day of the month, and day of the year. Building a model using deep learning with the capability of predicting categorization and future cash flow would have value in that it would help us optimize the work our money does for us while reducing the stress of having to do so directly and explicitly[^third]. The transaction data is key - but how many dimensions do we need, and can we infer labels i.e. categories when the data is lacking detail (as we can directly see in the second example above)? 
 
 Across the fintech industry, there are some relatively popular players in the aggregation, budgeting, and forecasting game. Mint[^fourth] pulls data from as many different accounts that you connect and tries to clean and categorize the transactions (with relative success - see above), Level Money[^fifth] offers up projections of your cash flow and spending plotted across the month (overly coarse in detail in my experience), and Plaid[^sixth] offers an API that formats transaction data into digestible formats, even predicting some labels with a paired confidence value to indicate reliability (label filling only works for some transaction types). Outside of the industry activity around this problem, there are also plenty of articles on using Deep Learning using Long Short-Term Memory models for creating predictions with financial time series data (list below).
 
-I am particularly passionate about this problem becuase not only am I frustrated by the lack of smarts in the tools I use to manage my finances, but also this is a key ingredient to the next generation of technology we are building for my startup, Astra. Creating models that can accurately predict one of our key labels given the other two would beneficial to our progress as well as the general studies that seek to use deep learning for financial predictions.
+I am particularly passionate about this problem becuase not only am I frustrated by the lack of smarts in the tools I use to manage my finances, but also this is a key ingredient to the next generation of technology we are building for my startup, Astra. Creating models that can accurately predict a missing key label given the one or two of the others would be beneficial to our progress as well as the broader machine learning field that seeks to use deep learning for financial predictions.
 
-- [Deep Learning for Time Series Modeling](http://cs229.stanford.edu/proj2012/BussetiOsbandWong-DeepLearningForTimeSeriesModeling.pdf)
-- [Deep Learning for Multivariate Financial Time Series](http://www.math.kth.se/matstat/seminarier/reports/M-exjobb15/150612a.pdf)
-- [Machine Learning with Financial Time Series Data](https://cloud.google.com/solutions/machine-learning-with-financial-time-series-data)
-- [Time Series Prediction with LSTM Recurrent Neural Networks in Python with Keras](http://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/)
-- [TensorFlow Tutorial for Time Series Prediction](https://github.com/tgjeon/TensorFlow-Tutorials-for-Time-Series)
+### Problem Statement
+This capstone seeks to predict labels for an incompletely labeled financial transaction within a time series. Our time series will be composed of financial transaction data with labels that include amount, date, category, and a textual description, plus the implied labels mentioned above. Our model will seek to predict missing labels, given one or more labels with a comparative study of performance for which labels are the strongest predictors and which label is subsequently most accurately predicted. Similar studies have been developed using a combination of Restricted Boltzman Machines and Multi-Layer Perceptrons[^seventh] for stock value predictions demonstrating error improvement compared to other machine (non-deep) learning models and using Deep Recurrent Neural Networks to predict energy loads, both of which suggest Deep Learning techniques offer a more robust learning model than other techniques. Furthermore, a market predictor has been developed using TensorFlow and documented in detail by the Google Cloud Platform team [^ninth] that can act as a technical and analytical benchmark.
+
+### Datasets and Inputs
+For preliminary training and testing of the deep learning model used for this capstone, I will use my own financial transactions from the past five years as downloaded from my Mint account. For submission of the project, I will include an anonymized version. The format for the each transaction below with starred items representing the most important labels. During the development of the project, using more of these labels may prove advantageous.
+- Date (MM/DD/YYYY)*
+- Description (Clean Textual Description)*
+- Original Description (Dense Raw Textual Description)	
+- Amount ($)*
+- Transaction Type (Credit/Debit)
+- [Category](https://www.mint.com/mint-categories)*
+- Account Name
+After developing the initial model with my personal dataset, my ambition is to include functionality that will allow anyone with a Mint account to execute the learning program and observe the results.
+
+### Solution Statement
+Using a Keras[^tenth] implementation of the TensorFlow [^eleventh] library, the solution to this project will be a Recurrant Neural Net with a Long Short-Term Memory model capable of learning from time series data. In order to include the Description and Category labels, it's my understanding that they will need to be converted into vectors[^twelfth] and merged [^thirteenth] with the Amount values. The measures of performance will mean squared difference for both predicted Amount values as well as vectorized Categories which will give an indication of proximity to the correct categorization.
 
 
+
+### Benchmark Model
+This project will use three models as benchmarks for the various elements as a part of a Deep Learning approach to the problem - Deep Learning for Multivariate Financial Time Series [^seventh] for an overall error rate comparison, Deep Learning for Multivariate Financial Time Series [^eigth] for the improvemnet approach compared to other machine learning model types, and Machine Learning with Financial Time Series Data [^ninth] for a technical approach. All use Deep Learning for Financial Time Series applications.
+
+### Evaluation Metrics
+For preliminary testing before creating the composite model of all labels, I will establish some base line values using Support Vector Machines using two labels at a time, building the combinations of parameters incrementally. The resulting values will provide benchmarks for Recurrant Neural Networks that composite the same label combinations. This will validate the approach and give an indication at how well each of the labels contributes to a predictive model. Also, as an overall benchmark for the final composite model, the error values documented of approximately 40% from the Multivariate Financial Time Series study [^seventh] will give an indication as to whether the system as applied to personal finance is valuable in comparison to being applied to the stock market.
+
+### Project Design
+This project will be implemented through the TensorFlow library, first using Support Vector Machines to identify classification accuracy benchmarks, then using Recurrant Neural Networks to incrementally build the complexity of a Long Short-Term Memory model to accommodate the time series characteristic of our financial transaction data. 
+
+#### 1. Prepare Data Set 
+- Confirm correct labels on Mint
+- Download CSV
+- Anonymize personal data
+- Define a function to convert labels to vectors 
+
+#### 2. Develop Bench Marks Study
+- Load the dataset from CSV file
+- Run TensorFlow Support Vector Machine combination studies (all combinations of 2 and 3 of 4 labels) using a train, test, validate ratio of 70, 15, 15
+- Document and Visualize Results
+
+#### 3. Develop Deep Learning Study
+- Load the dataset
+- Run TensorFlow Recurrant Neural Net (Long Short-Term Memory) combination studies (all combinations of 2 and 3 of 4 labels) using a train, test, validate ratio of 70, 15, 15
+- Document and visualize results
+
+#### 4. Develop Merged Deep Learning Study
+- Load the dataset
+- Run TensorFlow Merged Recurrant Neural Net (Long Short-Term Memory) combination studies (all combinations of 2 and 3 of 4 labels) using a train, test, validate ratio of 70, 15, 15
+- Document and visualize results
+
+#### 5. Develop Merged Deep Learning Study
+- Analyze results of above three studies
+- Develop detailed visualizations of comparison between bench marks, studies, and final results
+- Develop final report
+
+#### 6. Bonus - Develop Generic Mint Onboarding
+- Experiment with Mint API [^fourteenth] for any Mint user to access the functionality
+- Develop simple function for querying predictions based on one or more labels
+
+### [Footnotes]
 [^first] [TechCrumnch // What’s next for personal financial services?](https://techcrunch.com/2016/04/23/whats-next-for-personal-financial-services/)
 > If 2015 was the year of the great “Bank Unbundling,” with new companies dissecting the consumer banking experience to offer specialized services, it was also a year that saw the emergence of a new landscape of financial influencers taking a seat at the table.
 
@@ -37,67 +89,13 @@ I am particularly passionate about this problem becuase not only am I frustrated
 >  Did you know that extra cash in your checking account is a missed opportunity? Every day, it loses value to inflation. To generate better returns, you could keep the bare minimum in your checking account and invest the rest. However, unexpected expenses can drain your account suddenly. Without extra cushioning in your checking account, you risk getting slapped with bank fees or credit card debt that quickly cancel out any gains from your investments. It feels like you can’t win.  Either you’re missing out on capital gains, or you’re playing limbo with your account balance. AI will make this struggle a thing of the past. Advances in AI will create a robo-accountant that knows your spending better than you do. By analyzing your purchase history, it will constantly move money between your checking, savings, investments and credit cards. This way, your checking account’s balance is always in the narrow “sweet spot:” high enough to avoid fees, but not so high that you miss out on investment yield.
 
 [^fourth] [Mint](https://www.mint.com/)
-
 [^fifth] [Level Money](https://www.levelmoney.com/)
-
 [^sixth] [Plaid](https://plaid.com/)
-
-### Problem Statement
-_(approx. 1 paragraph)_
-
-In this section, clearly describe the problem that is to be solved. The problem described should be well defined and should have at least one relevant potential solution. Additionally, describe the problem thoroughly such that it is clear that the problem is quantifiable (the problem can be expressed in mathematical or logical terms) , measurable (the problem can be measured by some metric and clearly observed), and replicable (the problem can be reproduced and occurs more than once).
-
-### Datasets and Inputs
-_(approx. 2-3 paragraphs)_
-
-In this section, the dataset(s) and/or input(s) being considered for the project should be thoroughly described, such as how they relate to the problem and why they should be used. Information such as how the dataset or input is (was) obtained, and the characteristics of the dataset or input, should be included with relevant references and citations as necessary It should be clear how the dataset(s) or input(s) will be used in the project and whether their use is appropriate given the context of the problem.
-
-Personal Fin Data
-App to allow individuals to connect to mint
-
-Parameters of data
-- Date
-- Amount
-- Description
-- Implied
--- Account
--- Day of Week
--- Day of Month
--- Day of Year
-
-### Solution Statement
-_(approx. 1 paragraph)_
-
-In this section, clearly describe a solution to the problem. The solution should be applicable to the project domain and appropriate for the dataset(s) or input(s) given. Additionally, describe the solution thoroughly such that it is clear that the solution is quantifiable (the solution can be expressed in mathematical or logical terms) , measurable (the solution can be measured by some metric and clearly observed), and replicable (the solution can be reproduced and occurs more than once).
-
-Tensorflow
-- Long Term Short Memory
-- Support Vector Machines
-
-### Benchmark Model
-_(approximately 1-2 paragraphs)_
-
-In this section, provide the details for a benchmark model or result that relates to the domain, problem statement, and intended solution. Ideally, the benchmark model or result contextualizes existing methods or known information in the domain and problem given, which could then be objectively compared to the solution. Describe how the benchmark model or result is measurable (can be measured by some metric and clearly observed) with thorough detail.
-
-### Evaluation Metrics
-_(approx. 1-2 paragraphs)_
-
-In this section, propose at least one evaluation metric that can be used to quantify the performance of both the benchmark model and the solution model. The evaluation metric(s) you propose should be appropriate given the context of the data, the problem statement, and the intended solution. Describe how the evaluation metric(s) are derived and provide an example of their mathematical representations (if applicable). Complex evaluation metrics should be clearly defined and quantifiable (can be expressed in mathematical or logical terms).
-
-### Project Design
-_(approx. 1 page)_
-
-In this final section, summarize a theoretical workflow for approaching a solution given the problem. Provide thorough discussion for what strategies you may consider employing, what analysis of the data might be required before being used, or which algorithms will be considered for your implementation. The workflow and discussion that you provide should align with the qualities of the previous sections. Additionally, you are encouraged to include small visualizations, pseudocode, or diagrams to aid in describing the project design, but it is not required. The discussion should clearly outline your intended workflow of the capstone project.
-
-### [Footnotes]
-
-
------------
-
-**Before submitting your proposal, ask yourself. . .**
-
-- Does the proposal you have written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Solution Statement** and **Project Design**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your proposal?
-- Have you properly proofread your proposal to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
+[^seventh] [Deep Learning for Multivariate Financial Time Series](http://www.math.kth.se/matstat/seminarier/reports/M-exjobb15/150612a.pdf)
+[^eigth] [Deep Learning for Multivariate Financial Time Series](http://cs229.stanford.edu/proj2012/BussetiOsbandWong-DeepLearningForTimeSeriesModeling.pdf)
+[^ninth] [Machine Learning with Financial Time Series Data](https://cloud.google.com/solutions/machine-learning-with-financial-time-series-data)
+[^tenth] [Time Series Prediction with LSTM Recurrent Neural Networks in Python with Keras](http://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/)
+[^eleventh] [TensorFlow Tutorial for Time Series Prediction](https://github.com/tgjeon/TensorFlow-Tutorials-for-Time-Series) 
+[^twelfth] [Plaid Categories - See ID Field](https://github.com/plaid/Support/blob/master/categories.md)
+[^thirteenth] [Two merged LSTM encoders for classification over two parallel sequences](https://keras.io/getting-started/sequential-model-guide/)
+[^fourteenth] [Unofficial Mint API](https://github.com/mrooney/mintapi)
