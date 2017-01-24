@@ -6,9 +6,9 @@ January 4th, 2017
 ## Proposal // Deep Learning Stock Value Predictor
 
 ### Domain Background
-Investment firms, hedge funds, and automated trading systems have used programming and advanced modeling to interact and profit from the stock market since computerization of the exchanges in the 1970s<sup>1</sup>.  Whether by means of better analysis, signal identification, or automating the frequency of trades, the goal has been to leverage technology in order create investment systems that outperform alternatives - either  service providers (competitors like alternative hedge funds) or products/benchmarks (ETFs or the S&P 500). 
+Investment firms, hedge funds, and automated trading systems have used programming and advanced modeling to interact with and profit from the stock market since computerization of the exchanges in the 1970s<sup>1</sup>.  Whether by means of better analysis, signal identification, or automating the frequency of trades, the goal has been to leverage technology in order create investment systems that outperform alternatives - either  service providers (competitors like alternative hedge funds) or products/benchmarks (ETFs or the S&P 500). 
 
-Today, the most promising and adcendant technology, Deep Learning, is the target of incorporation into advanced investment systems<sup>2</sup> offered by "Artificially Intelligent Hedge Funds"<sup>3</sup> and "Deep Investing"<sup>4</sup> as-a-service startups, with claims of outperformance of the S&P 500 Index of up to 87%<sup>4</sup>. Given monetary opportunity that large, can a basic Deep Learning model built with publicly available technology achieve positive predictive performance? Even an order of magnitude less of an advantage (8.7%) over the noise in the  market and a baseline of the S&P ETF (SPY) could be valuable for an amateur investor!
+Today, the most promising and adcendant technology, Deep Learning, is the target of incorporation into advanced investment systems<sup>2</sup> offered by "Artificially Intelligent Hedge Funds"<sup>3</sup> and "Deep Investing"<sup>4</sup> as-a-service startups, with claims of outperformance of the S&P 500 Index of up to 87%<sup>4</sup>. Given profit opportunity that large, can a basic Deep Learning model built with publicly available technology achieve positive predictive performance? Even an order of magnitude less of an advantage (8.7%) over the noise in the  market and a baseline of the S&P ETF (SPY) could be valuable for an amateur investor!
 
 This project seeks to utilize Deep Learning models, specifically Recurrant Neural Nets (RNNs), to predict stock prices. Much academic work has been developed using this technique<sup>5</sup>, as well as similar studies using Boltzmann machines<sup>6</sup> for both momentum trading strategies and time series prediction. As discussed above and in the below articles from sources ranging from technology magazines (Wired<sup>3</sup>) to the standard bearer for market information (Financial Times<sup>2</sup>), these models are also being applied to real world trading platforms<sup>7</sup>. In this study, I will use Keras<sup>8</sup> to build a RNN to predict stock prices using historical closing price and trading volume and visualize both the predicted price values over time and the optimal parameters for the model.
 
@@ -20,11 +20,12 @@ All of the necessary data for the project will come from Yahoo Finance<sup>10</s
 - Target Stock // Daily Adjusted Closing Price // Value we are trying to predict 
 - Target Stock // Daily Volume // Indicates level of trade activity and will give a sense of market momentum for the individual stock
 - SPY ETF // Daily Adjusted Closing Price // Indicates macro market trend for prices
+
 Additional inputs to experiment with adding to the model:
-- Target Stock // n Day Rolling Mean Average from Daily Adjusted Closing Price // If n=20 this could smooth out the noise in the market
-- SPY ETF // n Day Rolling Mean Average from Daily Adjusted Closing Price // If n=20 this could smooth out the noise in the macro trends of the market
+- Target Stock // n Day Rolling Mean Average from Daily Adjusted Closing Price // If n=20 this could smooth out the noise in the market relative to the target stock
+- SPY ETF // n Day Rolling Mean Average from Daily Adjusted Closing Price // If n=20 this could smooth out the noise in the market relative to the macro market trends
 - Target Stock Sector ETF // Daily Adjusted Closing Price // Indicates micro market trend for prices
-- Target Stock Sector ETF // n Day Rolling Mean Average from Daily Adjusted Closing Price // If n=20 this could smooth out the noise in the micro trends of the market
+- Target Stock Sector ETF // n Day Rolling Mean Average from Daily Adjusted Closing Price // If n=20 this could smooth out the noise in the market relative to micro trends 
 
 ### Solution Statement
 The solution to this project will be programmed in a Python Notebook for ease of reproducability. Using a Keras<sup>12</sup>implementation of the TensorFlow<sup>13</sup> library, the solution will utilize a Recurrant Neural Net with a Long Short-Term Memory model capable of learning from time series data and will be supported by Pandas DataFrame library for convenient time series data schema after requests received from the Yahoo Finance API<sup>11</sup>. Additionally the project will experiment with improving the RNN with Ensemble techniques. The measures of performance will be based on the predicted stock ticker price in comparison to both the actual price and the benchmark model's predicted price which will utilize a Linear Regression model from Scikit-Learn<sup>14</sup>.
@@ -44,7 +45,7 @@ This project will be implemented through the Keras/TensorFlow library using Recu
 - Git project organization
 - Set up documentation template
 
-#### 1. Prepare Data Set 
+#### 1. Prepare Dataset 
 - Incorporate Yahoo Finance API to request stock data
 - Test request and successful receipt of a target stock ticker
 - Process the requested data into Pandas Dataframe
@@ -52,7 +53,7 @@ This project will be implemented through the Keras/TensorFlow library using Recu
 - Append columns of normalized data to stock Dataframe
 - Plot sequnce to confirm calculations
 - Convert the above sequence into a modular function
-- Data Set will be used with a 80/20 split on training and test data across all models
+- Dataset will be used with a 80/20 split on training and test data across all models
 
 #### 2. Develop Benchmark Model
 - Set up basic Linear Regression model with Scikit-Learn
@@ -80,7 +81,7 @@ This project will be implemented through the Keras/TensorFlow library using Recu
 
 -----------
 
-### [Footnotes]
+### Footnotes
 1. [Bloomberg // History of Algorithmic Trading Shows Promise and Perils](https://www.bloomberg.com/view/articles/2012-08-08/history-of-algorithmic-trading-shows-promise-and-perils)
 2. [Financial Times // Money managers seek AI’s ‘deep learning’](https://www.ft.com/content/9278d1b6-1e02-11e6-b286-cddde55ca122)
 3. [Wired // The Rise of the Artificially Intelligent Hedge Fund](https://www.wired.com/2016/01/the-rise-of-the-artificially-intelligent-hedge-fund/)
