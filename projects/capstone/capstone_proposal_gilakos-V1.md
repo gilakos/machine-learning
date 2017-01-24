@@ -1,51 +1,100 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Proposal
 Gil Akos 
-November 4th, 2016
+January 4th, 2017
 
-## Proposal // Stock Value Predictor
+## Proposal // Deep Learning Stock Value Predictor
 
 ### Domain Background
-_(approx. 1-2 paragraphs)_
+Investment firms, hedge funds, and automated trading systems have used programming and advanced modeling to interact and profit from the stock market since computerization of the exchanges in the 1970s<sup>1</sup>.  Whether by means of better analysis, signal identification, or automating the frequency of trades, the goal has been to leverage technology in order create investment systems that outperform alternatives - either  service providers (competitors like alternative hedge funds) or products/benchmarks (ETFs or the S&P 500). 
 
-In this section, provide brief details on the background information of the domain from which the project is proposed. Historical information relevant to the project should be included. It should be clear how or why a problem in the domain can or should be solved. Related academic research should be appropriately cited in this section, including why that research is relevant. Additionally, a discussion of your personal motivation for investigating a particular problem in the domain is encouraged but not required.
+Today, the most promising and adcendant technology, Deep Learning, is the target of incorporation into advanced investment systems<sup>2</sup> offered by "Artificially Intelligent Hedge Funds"<sup>3</sup> and "Deep Investing"<sup>4</sup> as-a-service startups, with claims of outperformance of the S&P 500 Index of up to 87%<sup>4</sup>. Given monetary opportunity that large, can a basic Deep Learning model built with publicly available technology achieve positive predictive performance? Even an order of magnitude less of an advantage (8.7%) over the noise in the  market and a baseline of the S&P ETF (SPY) could be valuable for an amateur investor!
+
+This project seeks to utilize Deep Learning models, specifically Recurrant Neural Nets (RNNs), to predict stock prices. Much academic work has been developed using this technique<sup>5</sup>, as well as similar studies using Boltzmann machines<sup>6</sup> for both momentum trading strategies and time series prediction. As discussed above and in the below articles from sources ranging from technology magazines (Wired<sup>3</sup>) to the standard bearer for market information (Financial Times<sup>2</sup>), these models are also being applied to real world trading platforms<sup>7</sup>. In this study, I will use Keras<sup>8</sup> to build a RNN to predict stock prices using historical closing price and trading volume and visualize both the predicted price values over time and the optimal parameters for the model.
 
 ### Problem Statement
-_(approx. 1 paragraph)_
+The challenge of this project is to accurately predict the future closing value of a given stock across a given period of time in the future. The hypothesized solution is that a Keras RNN model is trainable across a time series<sup>9</sup> of adjusted closing stock price values. Because almost all stocks have a large range of historical daily closing price values, the model should be trainable over a long period of time and the subsequent predicted models backtested for their accuracy against a sizeable period of time as well. The predicted values will be logged daily both as prices and as a measured percentage difference of predicted value over actual value. The model will be applied to ten popular stocks traded on the New York Stock Exchange (NYSE) to replicate the problem and compare results. Time allowing, I will also add states of buy, sell, hold the virtual portfolio of the project to measure gains relative to the benchmark S&P ETF.
 
-In this section, clearly describe the problem that is to be solved. The problem described should be well defined and should have at least one relevant potential solution. Additionally, describe the problem thoroughly such that it is clear that the problem is quantifiable (the problem can be expressed in mathematical or logical terms) , measurable (the problem can be measured by some metric and clearly observed), and replicable (the problem can be reproduced and occurs more than once).
-
-### Datasets and Inputs
-_(approx. 2-3 paragraphs)_
-
-In this section, the dataset(s) and/or input(s) being considered for the project should be thoroughly described, such as how they relate to the problem and why they should be used. Information such as how the dataset or input is (was) obtained, and the characteristics of the dataset or input, should be included with relevant references and citations as necessary It should be clear how the dataset(s) or input(s) will be used in the project and whether their use is appropriate given the context of the problem.
+### Datasets and Inputs 
+All of the necessary data for the project will come from Yahoo Finance<sup>10</sup> and its use will be automated by way of the Yahoo Finance API<sup>11</sup> for ease of reproducability. The program will be given a stock ticker symbol as target for prediction and will pull the below historical data from the API to train the model:
+- Target Stock // Daily Adjusted Closing Price // Value we are trying to predict 
+- Target Stock // Daily Volume // Indicates level of trade activity and will give a sense of market momentum for the individual stock
+- SPY ETF // Daily Adjusted Closing Price // Indicates macro market trend for prices
+Additional inputs to experiment with adding to the model:
+- Target Stock // n Day Rolling Mean Average from Daily Adjusted Closing Price // If n=20 this could smooth out the noise in the market
+- SPY ETF // n Day Rolling Mean Average from Daily Adjusted Closing Price // If n=20 this could smooth out the noise in the macro trends of the market
+- Target Stock Sector ETF // Daily Adjusted Closing Price // Indicates micro market trend for prices
+- Target Stock Sector ETF // n Day Rolling Mean Average from Daily Adjusted Closing Price // If n=20 this could smooth out the noise in the micro trends of the market
 
 ### Solution Statement
-_(approx. 1 paragraph)_
-
-In this section, clearly describe a solution to the problem. The solution should be applicable to the project domain and appropriate for the dataset(s) or input(s) given. Additionally, describe the solution thoroughly such that it is clear that the solution is quantifiable (the solution can be expressed in mathematical or logical terms) , measurable (the solution can be measured by some metric and clearly observed), and replicable (the solution can be reproduced and occurs more than once).
+The solution to this project will be programmed in a Python Notebook for ease of reproducability. Using a Keras<sup>12</sup>implementation of the TensorFlow<sup>13</sup> library, the solution will utilize a Recurrant Neural Net with a Long Short-Term Memory model capable of learning from time series data and will be supported by Pandas DataFrame library for convenient time series data schema after requests received from the Yahoo Finance API<sup>11</sup>. Additionally the project will experiment with improving the RNN with Ensemble techniques. The measures of performance will be based on the predicted stock ticker price in comparison to both the actual price and the benchmark model's predicted price which will utilize a Linear Regression model from Scikit-Learn<sup>14</sup>.
 
 ### Benchmark Model
-_(approximately 1-2 paragraphs)_
-
-In this section, provide the details for a benchmark model or result that relates to the domain, problem statement, and intended solution. Ideally, the benchmark model or result contextualizes existing methods or known information in the domain and problem given, which could then be objectively compared to the solution. Describe how the benchmark model or result is measurable (can be measured by some metric and clearly observed) with thorough detail.
+This project will use a Linear Regression model as its primary benchmark. This model will be based on the examples presented in Udacity's Machine Learning for Trading course<sup>15</sup>. Additionally I will reference two other models for comparison of a Deep Learning approach to this problem - Deep Learning for Multivariate Financial Time Series<sup>16</sup> for an overall error rate comparison and Machine Learning with Financial Time Series Data<sup>7</sup> for a technical approach. Both use Deep Learning models for Financial Time Series predictions as well as focus on stock or market based applications.
 
 ### Evaluation Metrics
-_(approx. 1-2 paragraphs)_
-
-In this section, propose at least one evaluation metric that can be used to quantify the performance of both the benchmark model and the solution model. The evaluation metric(s) you propose should be appropriate given the context of the data, the problem statement, and the intended solution. Describe how the evaluation metric(s) are derived and provide an example of their mathematical representations (if applicable). Complex evaluation metrics should be clearly defined and quantifiable (can be expressed in mathematical or logical terms).
+The measures of performance for this project will be the mean squared difference between predicted and actual values of the target stock ticker at market close and the delta between the performance of the benchmark model (Linear Regression) and our primary model (Deep Learning). The Lucena Research tool shown in the Machine Learning for Trading<sup>15</sup> course displays a 3.64x improvement over the S&P benchmark from 1/1/09 to 6/18/15, which I will use for both the test date range and performance evaluation per the evaluation metrics.
 
 ### Project Design
-_(approx. 1 page)_
+This project will be implemented through the Keras/TensorFlow library using Recurrant Neural Networks to incrementally build the complexity of a Long Short-Term Memory model to accommodate the Time Series characteristic of our stock price data. Development workflow will follow the below sequence:
 
-In this final section, summarize a theoretical workflow for approaching a solution given the problem. Provide thorough discussion for what strategies you may consider employing, what analysis of the data might be required before being used, or which algorithms will be considered for your implementation. The workflow and discussion that you provide should align with the qualities of the previous sections. Additionally, you are encouraged to include small visualizations, pseudocode, or diagrams to aid in describing the project design, but it is not required. The discussion should clearly outline your intended workflow of the capstone project.
+#### 0. Set Up Infrastructure
+- Python Notebook
+- Incorporate required Libraries (Keras, Tensorflow, Pandas, Seaborn)
+- Git project organization
+- Set up documentation template
+
+#### 1. Prepare Data Set 
+- Incorporate Yahoo Finance API to request stock data
+- Test request and successful receipt of a target stock ticker
+- Process the requested data into Pandas Dataframe
+- Develop function for normalizing and un-normalizing price and volume data
+- Append columns of normalized data to stock Dataframe
+- Plot sequnce to confirm calculations
+- Convert the above sequence into a modular function
+- Data Set will be used with a 80/20 split on training and test data across all models
+
+#### 2. Develop Benchmark Model
+- Set up basic Linear Regression model with Scikit-Learn
+- Calibrate parameters 
+- Log parameters for Step 3 and reproducability
+- Log results
+
+#### 3. Develop Basic Deep Learning Model
+- Set up basic RNN model with Keras utilizing parameters from Benchmark Model
+- Calibrate parameters
+- Log parameters
+- Log Results
+
+#### 4. Improve Deep Learning Model
+- Develop, document, and compare results using additional labels for the Deep Learning Model (see Datasets and Inputs section above)
+- Develop, document, and compare results using Ensemble techniques
+- Log Parameters
+- Log Results
+
+#### 5. Document and Visualize Results
+- Plot Actual, Benchmark Predicted Values, and Deep Learning Predicted Values per time series
+- Plot Benchmark performance versus Deep Learning performance as described as "delta" above
+- Plot Seaborn Grid of additional label use and corresponding improvement
+- Analyze and describe results for report.
 
 -----------
 
-**Before submitting your proposal, ask yourself. . .**
-
-- Does the proposal you have written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Solution Statement** and **Project Design**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your proposal?
-- Have you properly proofread your proposal to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
+### [Footnotes]
+1. [Bloomberg // History of Algorithmic Trading Shows Promise and Perils](https://www.bloomberg.com/view/articles/2012-08-08/history-of-algorithmic-trading-shows-promise-and-perils)
+2. [Financial Times // Money managers seek AI’s ‘deep learning’](https://www.ft.com/content/9278d1b6-1e02-11e6-b286-cddde55ca122)
+3. [Wired // The Rise of the Artificially Intelligent Hedge Fund](https://www.wired.com/2016/01/the-rise-of-the-artificially-intelligent-hedge-fund/)
+4. [Stocks Neural Net // About](https://stocksneural.net/about)
+5. [Deep Learning for Time Series Modeling](http://cs229.stanford.edu/proj2012/BussetiOsbandWong-DeepLearningForTimeSeriesModeling.pdf)
+6. [Applying Deep Learning to Enhance Momentum Trading Strategies in Stocks](http://cs229.stanford.edu/proj2013/TakeuchiLee-ApplyingDeepLearningToEnhanceMomentumTradingStrategiesInStocks.pdf)
+7. [MIT Technology Review // Will AI-Powered Hedge Funds Outsmart the Market?](https://www.technologyreview.com/s/600695/will-ai-powered-hedge-funds-outsmart-the-market/)
+8. [Keras // Deep Learning library for Theano and TensorFlow](https://keras.io)
+9. [Time Series Prediction With Deep Learning in Keras](http://machinelearningmastery.com/time-series-prediction-with-deep-learning-in-python-with-keras/)
+10. [Yahoo Finance](http://finance.yahoo.com/)
+11. [Yahoo Finance // Python API](https://pypi.python.org/pypi/yahoo-finance)
+12. [Time Series Prediction with LSTM Recurrent Neural Networks in Python with Keras](http://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/)
+13. [TensorFlow Tutorial for Time Series Prediction](https://github.com/tgjeon/TensorFlow-Tutorials-for-Time-Series) 
+14. [Scikit-Learn](http://scikit-learn.org/) 
+15. [Machine Learning for Trading](https://www.udacity.com/course/machine-learning-for-trading--ud501)
+16. [Deep Learning for Multivariate Financial Time Series](http://www.math.kth.se/matstat/seminarier/reports/M-exjobb15/150612a.pdf)
+17. [Machine Learning with Financial Time Series Data](https://cloud.google.com/solutions/machine-learning-with-financial-time-series-data)
