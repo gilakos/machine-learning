@@ -19,10 +19,12 @@ Project assets and instructions are organized in this project's [wiki](https://g
 Project Submissions
 - Proposal
 - Report
+
 Project Development
 - Benchmark Study
 - RNN Study
 - Ensemble Study
+
 Project Technology
 - Instructions for running the example code
 - External Libraries
