@@ -22,11 +22,10 @@ def create_dataset(data, seq_len=3, tt_split=0.90, normalise=True, pad=None):
     for index in range(len(data) - sequence_length):
         if (pad):
             x = []
-            for i in range(0, sequence_length):
-                if i < seq_len:
-                    x.append(data[index + i])
-                else:
-                    x.append([0.0])
+            for i in range(0, pad-seq_len):
+                x.append(data[index])
+            for i in range(0, seq_len+1):
+                x.append(data[index + i])
         else:
             x = data[index: index + sequence_length]
         result.append(x)
