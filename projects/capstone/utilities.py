@@ -1,22 +1,34 @@
-def create_dataset(data, seq_len=3, tt_split=0.90, normalise=True):
+def create_dataset(data, seq_len=3, tt_split=0.90, normalise=True, pad=None):
     '''
     Convert an array of data into LSTM format test and train sequences
     :param data: array of data to convert
     :param seq_len: lookback value for number of entries per LSTM timestep: default 3
     :param tt_split: ratio of training data to test data: default = .90
     :param normalise_window: optional normalize
+    :param pad: optional add padding of 0 to match dataset lengths
     :return: four arrays: x_train, y_train, x_test, y_test
     '''
     import numpy as np
 
+
     sequence_length = seq_len + 1
+    if (pad):
+        sequence_length = pad+1
     result = []
     data_np = np.array(data)
     data_fl = data_np.astype(np.float)
     bounds = [np.amin(data_fl), np.amax(data_fl)]
 
     for index in range(len(data) - sequence_length):
-        result.append(data[index: index + sequence_length])
+        if (pad):
+            x = []
+            for i in range(0, pad-seq_len):
+                x.append(data[index])
+            for i in range(0, seq_len+1):
+                x.append(data[index + i])
+        else:
+            x = data[index: index + sequence_length]
+        result.append(x)
 
     if normalise:
         result = normalise_all(result)
@@ -26,9 +38,9 @@ def create_dataset(data, seq_len=3, tt_split=0.90, normalise=True):
     train = result[:int(row), :]
     # np.random.shuffle(train)
     x_train = train[:, :-1]
-    y_train = train[:, -1]
+    y_train = train[:, (seq_len-1)]
     x_test = result[int(row):, :-1]
-    y_test = result[int(row):, -1]
+    y_test = result[int(row):, (seq_len-1)]
 
     x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
     x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
