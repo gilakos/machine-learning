@@ -1,7 +1,7 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Porject
 Gil Akos 
-January 4th, 2017
+April 7th, 2017
 
 ## Deep Learning Stock Value Predictor
 
@@ -13,23 +13,37 @@ Today, the most promising and adcendant technology, Deep Learning, is the target
 
 This project seeks to utilize Deep Learning models, specifically Recurrant Neural Nets (RNNs), to predict stock prices. Much academic work has been developed using this technique<sup>5</sup>, as well as similar studies using Boltzmann machines<sup>6</sup> for both momentum trading strategies and time series prediction. As discussed above and in the below articles from sources ranging from technology magazines (Wired<sup>3</sup>) to the standard bearer for market information (Financial Times<sup>2</sup>), these models are also being applied to real world trading platforms<sup>7</sup>. In this study, I will use Keras<sup>8</sup> to build a RNN to predict stock prices using historical closing price and trading volume and visualize both the predicted price values over time and the optimal parameters for the model.
 
-### Project Organization [WIP]
-Project assets and instructions are organized in this project's [wiki](https://github.com/gilakos/machine-learning/wiki), including the below items:
+### Project Organization
+Project assets are organized as follows:
 
 Project Submissions
 - Proposal
 - Report
 
 Project Development
-- Benchmark Study
-- RNN Study
-- Ensemble Study
+- Development (python notebooks)
+- Examples
 
-Project Technology
-- Instructions for running the example code
-- External Libraries
-- Internal Documentation
+Project Assets (exports per study)
+- HTMLs
+- Graphs
+- Diagrams
 
+### Sequence of Project Studies
+- Study 00 // Data Exploration // Gathering and Analyzing Stock Data
+- Study 01 // Benchmark Model // Linear Regression with Sci-kit Learn
+- Study 02 // Benchmark Model // Polynomial Regression with Sci-kit Learn
+- Study 03 // Deep Learning Model // Multi-Layer Perceptron with Keras and Tensorflow
+- Study 04 // Deep Learning Model // Long Short-term Memory “LSTM” with Keras and Tensorflow
+- Study 05 // Deep Learning Model // LSTM with Variable “Lookback” Dataset (Adjusted Close)
+- Study 06 // Deep Learning Model // LSTM with Variable “Lookback” Dataset (Trading Volume)
+- Study 07 // Deep Learning Model // LSTM with two “Stacked” LSTM Layers (Adjusted Close)
+- Study 08 // Deep Learning Model // LSTM with two “Merged” LSTM Branches (Adjusted Close + Volume)
+- Study 09 // Deep Learning Model // LSTM with two “Merged” LSTM Branches with “Zero” Padding Datasets (Adjusted Close + Trading Volume)
+- Study 10 // Deep Learning Model // LSTM with two “Merged” LSTM Branches with “i” Padding Datasets (Adjusted Close + Trading Volume)
+- Study 11 // Deep Learning Model // LSTM with two “Merged” LSTM Branches (Adjusted Close + SPY Adjusted Close)
+- Study 12 // Deep Learning Model // Final LSTM with Tuned Dataset (Adjusted Close) and Parameters
+- Study 13 // Deep Learning Model // Final LSTM with Tuned Dataset (Adjusted Close) and Parameters using four previously unused tickers
 
 -----------
 

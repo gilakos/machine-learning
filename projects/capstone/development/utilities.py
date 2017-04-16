@@ -14,6 +14,7 @@ def create_dataset(data, seq_len=3, tt_split=0.90, normalise=True, pad=None):
     sequence_length = seq_len + 1
     if (pad):
         sequence_length = pad+1
+        #print('pad active')
     result = []
     data_np = np.array(data)
     data_fl = data_np.astype(np.float)
@@ -37,10 +38,12 @@ def create_dataset(data, seq_len=3, tt_split=0.90, normalise=True, pad=None):
     row = round(tt_split * result.shape[0])
     train = result[:int(row), :]
     # np.random.shuffle(train)
+    if (pad):
+        offset = seq_len
     x_train = train[:, :-1]
-    y_train = train[:, (seq_len-1)]
+    y_train = train[:, -1]
     x_test = result[int(row):, :-1]
-    y_test = result[int(row):, (seq_len-1)]
+    y_test = result[int(row):, -1]
 
     x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
     x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
